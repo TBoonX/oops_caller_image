@@ -6,6 +6,14 @@ touch /builds/root/test/$1.xml
 touch /builds/root/test/$1_correct.xml
 touch /builds/root/test/$1_short.xml
 
+# If possible, try to copy ttl file from PWD
+lines=`ls -hal $1.ttl | wc -l`
+lines=$(($lines + 1))
+
+if [ $lines -gt 1 ]; then
+    cp -n $PWD/$1.ttl /builds/root/test/$1.ttl
+fi
+
 # Create an XML
 rapper -i turtle -o rdfxml /builds/root/test/$1.ttl > /builds/root/test/$1.xml #transform to RDF
 tr '\n' ' ' < /builds/root/test/$1.xml > /builds/root/test/$1_short.xml #make one line
@@ -17,4 +25,3 @@ cat /builds/root/test/$1_correct.xml
 # Send it to OOPS
 #curl -X POST -H "Content-Type: text/xml" http://oops-ws.oeg-upm.net/rest --data @/builds/root/test/$1_correct.xml
 curl -X POST -H "Content-Type: text/xml" http://oops.linkeddata.es/rest --data @/builds/root/test/$1_correct.xml
-

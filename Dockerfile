@@ -1,4 +1,6 @@
 FROM ubuntu:latest
+LABEL version="0.1"
+LABEL maintainer="aksw.org/KurtJunghanns"
 
 RUN apt-get update
 RUN apt-get install -y git
