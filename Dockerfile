@@ -37,8 +37,4 @@ RUN make install
 ADD script.sh /script.sh
 RUN chmod 777 /script.sh
 
-# Prepare files
-RUN mkdir -p /builds/root/test/
-RUN chmod -R 777 /builds/root/test/
-
 ENTRYPOINT ["/bin/sh", "/script.sh"]

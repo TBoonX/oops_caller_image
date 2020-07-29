@@ -1,27 +1,23 @@
-pwd
-ls -hal
+#!/bin/sh
+
+#output=/dev/null
 
 # Prepare files
-touch /builds/root/test/$1.xml
-touch /builds/root/test/$1_correct.xml
-touch /builds/root/test/$1_short.xml
-
-# If possible, try to copy ttl file from PWD
-lines=`ls -hal $1.ttl | wc -l`
-lines=$(($lines + 1))
-
-if [ $lines -gt 1 ]; then
-    cp -n $PWD/$1.ttl /builds/root/test/$1.ttl
-fi
+touch $1.xml
+touch $1_correct.xml
+touch $1_short.xml
+touch result.xml
 
 # Create an XML
-rapper -i turtle -o rdfxml /builds/root/test/$1.ttl > /builds/root/test/$1.xml #transform to RDF
-tr '\n' ' ' < /builds/root/test/$1.xml > /builds/root/test/$1_short.xml #make one line
-echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?><OOPSRequest>      <OntologyUrl></OntologyUrl>      <OntologyContent><![CDATA[" > /builds/root/test/$1_correct.xml #Add OOPS header
-cat /builds/root/test/$1_short.xml >> /builds/root/test/$1_correct.xml #Add content
-echo "]]></OntologyContent>      <Pitfalls></Pitfalls>      <OutputFormat>RDF/XML</OutputFormat></OOPSRequest>" >> /builds/root/test/$1_correct.xml #Add OOPS Footer
-cat /builds/root/test/$1_correct.xml
+rapper -q -i turtle -o rdfxml $1.ttl > $1.xml #transform to RDF
+tr '\n' ' ' < $1.xml > $1_short.xml #make one line
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?><OOPSRequest>      <OntologyUrl></OntologyUrl>      <OntologyContent><![CDATA[" > $1_correct.xml #Add OOPS header
+cat $1_short.xml >> $1_correct.xml #Add content
+echo "]]></OntologyContent>      <Pitfalls></Pitfalls>      <OutputFormat>RDF/XML</OutputFormat></OOPSRequest>" >> $1_correct.xml #Add OOPS Footer
+#cat $1_correct.xml
 
 # Send it to OOPS
-#curl -X POST -H "Content-Type: text/xml" http://oops-ws.oeg-upm.net/rest --data @/builds/root/test/$1_correct.xml
-curl -X POST -H "Content-Type: text/xml" http://oops.linkeddata.es/rest --data @/builds/root/test/$1_correct.xml
+#curl -X POST -H "Content-Type: text/xml" http://oops-ws.oeg-upm.net/rest --data @$1_correct.xml
+curl -s -X POST -H "Content-Type: text/xml" http://oops.linkeddata.es/rest --data @$1_correct.xml > result.xml
+
+cat result.xml
