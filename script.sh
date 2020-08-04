@@ -18,6 +18,4 @@ echo "]]></OntologyContent>      <Pitfalls></Pitfalls>      <OutputFormat>RDF/XM
 
 # Send it to OOPS
 #curl -X POST -H "Content-Type: text/xml" http://oops-ws.oeg-upm.net/rest --data @$1_correct.xml
-curl -s -X POST -H "Content-Type: text/xml" http://oops.linkeddata.es/rest --data @$1_correct.xml > result.xml
-
-cat result.xml
+curl -s -X POST -H "Content-Type: text/xml" http://oops.linkeddata.es/rest --data @$1_correct.xml -o result.xml
