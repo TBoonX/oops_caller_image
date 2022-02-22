@@ -2,17 +2,7 @@ FROM ubuntu:latest
 LABEL version="0.1"
 LABEL maintainer="aksw.org/KurtJunghanns"
 
-RUN apt-get update
-RUN apt-get install -y git
-RUN apt-get install -y curl
-RUN apt-get install -y automake
-RUN apt-get install -y build-essential libtool
-RUN apt-get install -y gtk-doc-tools
-RUN apt-get install -y autopoint
-RUN apt-get install -y bison
-RUN apt-get install -y libxml2
-RUN apt-get install -y libxml2-dev
-RUN apt-get install -y libraptor2-0
+RUN apt-get update && apt-get install -y git curl automake build-essential libtool gtk-doc-tools autopoint bison libxml2 libxml2-dev libraptor2-0
 
 #install flex
 WORKDIR /
@@ -29,9 +19,7 @@ WORKDIR /
 RUN git clone git://github.com/dajobe/raptor.git
 WORKDIR raptor
 RUN ./autogen.sh
-RUN make
-RUN make check
-RUN make install
+RUN make && make check && make install
 
 #add script
 ADD script.sh /script.sh
