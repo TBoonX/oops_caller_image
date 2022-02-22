@@ -2,6 +2,10 @@ FROM ubuntu:latest
 LABEL version="0.1"
 LABEL maintainer="aksw.org/KurtJunghanns"
 
+# Set time zone
+ENV TZ=Europe/Berlin
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 RUN apt-get update && apt-get install -y git curl automake build-essential libtool gtk-doc-tools autopoint bison libxml2 libxml2-dev libraptor2-0
 
 #install flex
@@ -19,7 +23,7 @@ WORKDIR /
 RUN git clone git://github.com/dajobe/raptor.git
 WORKDIR raptor
 RUN ./autogen.sh
-RUN make && make check && make install
+RUN make && make install
 
 #add script
 ADD script.sh /script.sh
